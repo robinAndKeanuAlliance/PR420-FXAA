@@ -12,8 +12,9 @@ namespace me
 
     namespace EnginePostEffectPass
 	{
-		enum Enum : PostEffectPass
-		{
+        enum Enum : PostEffectPass
+        {
+            fxaa = 50,
             DepthOfField = 100,
 			Final = INT32_MAX
 		};
@@ -73,13 +74,27 @@ namespace me
         virtual ~FinalPostEffect() = default;
         float GetBrightness() const { return m_Brightness; }
         void SetBrightness(float value) { m_Brightness = value; SetParamsDirty(); }
-        float GetFXAA() { return m_postEffect; }
-        void SetFXAA(float value) { m_postEffect = value; SetParamsDirty(); }
     protected:
         virtual void WriteParams(D3D11Buffer& paramsCB) override;
 
     private:
         float m_Brightness;
-        float m_postEffect;
+    };
+
+    class fxaaPostEffect : public PostEffect
+    {
+    public:
+        static const PostEffectPass Pass = EnginePostEffectPass::fxaa;
+
+        fxaaPostEffect();
+        virtual ~fxaaPostEffect() = default;
+        float getValue() const { return m_value; }
+        void setValue(float value) { m_value = value; SetParamsDirty(); }
+    protected:
+        virtual void WriteParams(D3D11Buffer& paramsCB) override;
+
+    private:
+        float m_value;
+
     };
 };
