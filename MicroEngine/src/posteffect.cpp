@@ -142,6 +142,7 @@ namespace me
     struct fxaaCBData
     {
         float m_value;
+        float m_Unused[3];
     } g_fxaaCBDATA = {};
 
     fxaaPostEffect::fxaaPostEffect()

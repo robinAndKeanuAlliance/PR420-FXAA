@@ -179,13 +179,18 @@ namespace capp
 
 
 		fxaaPostEffect* fxaa = m_Renderer->GetPostEffect<fxaaPostEffect>();
-		if(Input::GetInstance()->IsKeyDown('P'))
+		if (Input::GetInstance()->IsKeyDown('P') && lastFramePButtonUp)
+		{
 			if (fxaa->getValue() == 0)
 			{
 				fxaa->setValue(1);
 			}
-			else if(fxaa->getValue() == 1)
+			else if (fxaa->getValue() == 1)
+			{
 				fxaa->setValue(0);
+			}
+		}
+		lastFramePButtonUp = Input::GetInstance()->IsKeyUp('P');
 
 		//Control selected entity
         const auto entity = m_EntityManager.GetEntity(m_ControlledEntityID).lock();

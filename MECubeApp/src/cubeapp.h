@@ -49,6 +49,8 @@ namespace capp
 		me::SystemManager m_SystemManager;
 		std::unique_ptr<me::Window> m_Window;
 		std::shared_ptr<me::Renderer> m_Renderer;
+
+		bool lastFramePButtonUp;
 	};
 
 }

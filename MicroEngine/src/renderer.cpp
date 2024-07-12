@@ -68,7 +68,7 @@ namespace me
 		    m_OffscreenRenderTargets[i] = meDevice->AcquireRenderTarget(RenderTargetSize::Full);
 
 		AddPostEffect(std::make_unique<fxaaPostEffect>());
-		AddPostEffect(std::make_unique<DepthOfFieldPostEffect>());
+		//AddPostEffect(std::make_unique<DepthOfFieldPostEffect>());
 		AddPostEffect(std::make_unique<FinalPostEffect>());
 
 		m_IsInit = true;

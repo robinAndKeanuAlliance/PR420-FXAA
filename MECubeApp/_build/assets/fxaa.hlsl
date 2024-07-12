@@ -1,6 +1,3 @@
-//-----------------------------------------------------------------------------
-// Copyright (c) 2022 Sascha Worszeck. All Rights Reserved.
-//-----------------------------------------------------------------------------
 #pragma warning(disable: 4000)
 #include "ShaderCommon.hlsl"
 
@@ -9,7 +6,7 @@ Texture2D g_OffscreenTexture : register(t0);
 
 // FXAA parameters (adjust these as needed)
 static const float FXAA_REDUCE_MIN = 1 / 128.0;  // Minimum contrast for FXAA processing
-static const float FXAA_REDUCE_MUL = 1 / 8.0;    // Reduce multiplier
+static const float FXAA_REDUCE_MUL = 2 / 8.0;    // Reduce multiplier
 static const float FXAA_SPAN_MAX = 8;            // Maximum span for FXAA filtering
 
 cbuffer PostEffectCB : register(b2)
