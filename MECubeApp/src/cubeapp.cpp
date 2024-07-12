@@ -41,7 +41,7 @@ namespace capp
 		m_Window = std::make_unique<Window>("CubeApp", hInst);
 
 		m_Renderer = std::make_shared<Renderer>();
-		if (!m_Renderer->Init(m_Window->GetHWnd(), m_Window->GetWidth(), m_Window->GetHeight()))
+		if (!m_Renderer->Init(m_Window->GetHWnd(),500,500))// m_Window->GetWidth(), m_Window->GetHeight()))
 			return ExitCode::GraphicInitError;
 
 		m_SystemManager.AddSystem(m_Renderer);
