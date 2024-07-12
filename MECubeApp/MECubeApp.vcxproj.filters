@@ -49,5 +49,8 @@
     <FxCompile Include="assets\FinalPostEffect.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
+    <FxCompile Include="assets\fxaa.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

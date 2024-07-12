@@ -121,20 +121,29 @@ namespace me
     struct FinalCBData
     {
         float m_Brightness;
+        float m_postEffect;
         float m_Unused[3];
     } g_FinalCBData = {};
 
     FinalPostEffect::FinalPostEffect()
         : PostEffect(Pass, "assets://FinalPostEffect.hlsl")
         , m_Brightness(1.0f)
+        , m_postEffect(0.0f)
     {
         D3D11Device::GetInstance()->AddPixelShader(GetPixelShader(), sizeof(FinalCBData), 1);
     }
 
     void FinalPostEffect::WriteParams(D3D11Buffer& buffer)
     {
-        g_FinalCBData.m_Brightness = m_Brightness;
-        buffer.Write(&g_FinalCBData, sizeof(FinalCBData));
+        FinalCBData cbData; // Local structure to hold constant buffer data
+        cbData.m_Brightness = m_Brightness;
+        cbData.m_postEffect = m_postEffect;
+        // Fill unused elements if necessary
+        cbData.m_Unused[0] = 0.0f;
+        cbData.m_Unused[1] = 0.0f;
+        cbData.m_Unused[2] = 0.0f;
+
+        buffer.Write(&cbData, sizeof(FinalCBData));
     }
 }
 

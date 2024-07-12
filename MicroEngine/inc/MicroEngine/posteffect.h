@@ -73,10 +73,13 @@ namespace me
         virtual ~FinalPostEffect() = default;
         float GetBrightness() const { return m_Brightness; }
         void SetBrightness(float value) { m_Brightness = value; SetParamsDirty(); }
+        float GetFXAA() { return m_postEffect; }
+        void SetFXAA(float value) { m_postEffect = value; SetParamsDirty(); }
     protected:
         virtual void WriteParams(D3D11Buffer& paramsCB) override;
 
     private:
         float m_Brightness;
+        float m_postEffect;
     };
 };

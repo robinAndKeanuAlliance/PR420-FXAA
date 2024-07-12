@@ -6,7 +6,7 @@
 
 #include "cubeapp.h"
 
-
+#include <iostream>
 
 #include "MicroEngine/d3d11util.h"
 #include "MicroEngine/lightcomponent.h"
@@ -41,7 +41,7 @@ namespace capp
 		m_Window = std::make_unique<Window>("CubeApp", hInst);
 
 		m_Renderer = std::make_shared<Renderer>();
-		if (!m_Renderer->Init(m_Window->GetHWnd(), m_Window->GetWidth(), m_Window->GetHeight()))
+		if (!m_Renderer->Init(m_Window->GetHWnd(),500,500))// m_Window->GetWidth(), m_Window->GetHeight()))
 			return ExitCode::GraphicInitError;
 
 		m_SystemManager.AddSystem(m_Renderer);
@@ -176,6 +176,11 @@ namespace capp
 			finalPE->SetBrightness(finalPE->GetBrightness() + deltaTime);
 		if (Input::GetInstance()->IsKeyDown(VK_SUBTRACT))
 			finalPE->SetBrightness(finalPE->GetBrightness() - deltaTime);
+		if (Input::GetInstance()->IsKeyDown('P'))
+		{
+			//finalPE->SetFXAA(finalPE->GetFXAA() +1);
+			//finalPE->SetBrightness(finalPE->GetBrightness() + 3545345345345);
+		}
 
 		//Control selected entity
         const auto entity = m_EntityManager.GetEntity(m_ControlledEntityID).lock();
