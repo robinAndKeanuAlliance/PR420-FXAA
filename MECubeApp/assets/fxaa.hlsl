@@ -4,23 +4,22 @@
 SamplerState g_Sampler : register(s0);
 Texture2D g_OffscreenTexture : register(t0);
 
-
-// FXAA parameters (adjust these as needed)
-static const float FXAA_REDUCE_MIN = 1 / 128;  // Minimum contrast for FXAA processing
-static const float FXAA_REDUCE_MUL = 1 / 8;    // Reduce multiplier
-static const float FXAA_SPAN_MAX = 8;            // Maximum span for FXAA filtering
+static const float FXAA_EDGE_THRESHOLD = 0.125;  // edge detection threshold
+static const float FXAA_EDGE_THRESHOLD_MIN = 0.0625;  //minimum edge detection threshold
+static const float FXAA_SEARCH_STEPS = 8;  //mumber of searches step
+static const float FXAA_SEARCH_THRESHOLD = 0.25;  // search acceleration
+static const float FXAA_SUBPIX_CAP = 0.75;  // subpixel alliasing removal amount
+static const float FXAA_SUBPIX_TRIM = 0.05;  // subnpixel alliasing removal trimming
 
 cbuffer PostEffectCB : register(b2)
 {
     float g_value;
 };
 
-float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 texSize)
+float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
 {
     if (g_value >= 1)
         return tex.Sample(samp, uv);
-
-    float2 rcpFrame = 1.0 / texSize;
 
     float3 rgbNW = tex.SampleLevel(samp, uv + float2(-1.0, -1.0) * rcpFrame, 0.0).rgb;
     float3 rgbNE = tex.SampleLevel(samp, uv + float2(1.0, -1.0) * rcpFrame, 0.0).rgb;
@@ -38,21 +37,16 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 texSize)
     float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
     float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
 
-    float lumaRange = lumaMax - lumaMin;
-
-    if (lumaRange < max(FXAA_REDUCE_MIN, lumaMax * FXAA_REDUCE_MUL))
-    {
-        return float4(rgbM, 1.0);
-    }
-
-    float2 dir = float2(0.0, 0.0);
+    float2 dir;
     dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
     dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));
 
-    float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+    float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_SEARCH_THRESHOLD), FXAA_EDGE_THRESHOLD_MIN);
     float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
-    dir = min(float2(FXAA_SPAN_MAX, FXAA_SPAN_MAX),
-        max(float2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin)) * rcpFrame;
+
+    dir = min(float2(FXAA_SEARCH_STEPS, FXAA_SEARCH_STEPS),
+        max(float2(-FXAA_SEARCH_STEPS, -FXAA_SEARCH_STEPS),
+            dir * rcpDirMin)) * rcpFrame;
 
     float3 rgbA = 0.5 * (
         tex.SampleLevel(samp, uv + dir * (1.0 / 3.0 - 0.5), 0.0).rgb +
@@ -62,19 +56,18 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 texSize)
         tex.SampleLevel(samp, uv + dir * 0.5, 0.0).rgb);
 
     float lumaB = dot(rgbB, luma);
+
     if (lumaB < lumaMin || lumaB > lumaMax)
-    {
         return float4(rgbA, 1.0);
-    }
-    return float4(rgbB, 1.0);
+    else
+        return float4(rgbB, 1.0);
 }
 
 float4 PS_Main(PS_INPUT_POSTEFFECT_PARAM IN) : SV_TARGET
 {
     float2 texSize;
     g_OffscreenTexture.GetDimensions(texSize.x, texSize.y);
+    float2 rcpFrame = 1.0 / texSize;
 
-    float4 color = FXAA(g_OffscreenTexture, g_Sampler, IN.UV, texSize);
-
-    return color;
+    return FXAA(g_OffscreenTexture, g_Sampler, IN.UV, rcpFrame);
 }
