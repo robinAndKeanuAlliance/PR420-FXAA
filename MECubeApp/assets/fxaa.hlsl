@@ -4,6 +4,7 @@
 SamplerState g_Sampler : register(s0);
 Texture2D g_OffscreenTexture : register(t0);
 
+
 // FXAA parameters (adjust these as needed)
 static const float FXAA_REDUCE_MIN = 1 / 128;  // Minimum contrast for FXAA processing
 static const float FXAA_REDUCE_MUL = 1 / 8;    // Reduce multiplier
