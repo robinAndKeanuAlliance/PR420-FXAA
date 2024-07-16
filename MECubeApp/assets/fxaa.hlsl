@@ -46,7 +46,7 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
     dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));
 
-    // Modes 2 and 3: Display detected edges
+    // modes 2 and 3: Display detected edges without and with direction
     if (g_value == 2)
         return float4(abs(dir), 0.0, 1.0);
     if (g_value == 3)
@@ -55,7 +55,7 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     //reduce edge direction to not have big values
     float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_SEARCH_THRESHOLD), FXAA_EDGE_THRESHOLD_MIN);
 
-    // Mode 4: Skip edge direction reduction
+    // mode 4: skip edge direction reduction to show this makes result better
     if (g_value != 4)
         dir *= (1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce));
     else
@@ -76,11 +76,11 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
         tex.SampleLevel(samp, uv + dir * -0.5, 0.0).rgb +
         tex.SampleLevel(samp, uv + dir * 0.5, 0.0).rgb);
 
-    // Mode 5: Always use rgbA color
+    // mode 5: always use rgbA color
     if (g_value == 5)
         return float4(rgbA, 1.0);
 
-    // Mode 6: Always use rgbB color
+    // mode 6: always use rgbB color
     if (g_value == 6)
         return float4(rgbB, 1.0);
 
