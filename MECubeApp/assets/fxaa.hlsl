@@ -19,7 +19,7 @@ cbuffer PostEffectCB : register(b2)
 // rcpFrame -> texture dimensions / size of pixels on screen used for pixel sampling offset to get neighbors
 float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
 {
-    if (g_value >= 1)
+    if (g_value == 0)
         return tex.Sample(samp, uv);
 
     //get color value from current pixel and its neighbors
@@ -46,13 +46,24 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
     dir.y = ((lumaNW + lumaSW) - (lumaNE + lumaSE));
 
+    // Modes 2 and 3: Display detected edges
+    if (g_value == 2)
+        return float4(abs(dir), 0.0, 1.0);
+    if (g_value == 3)
+        return float4(dir, 0.0, 1.0);
+
     //reduce edge direction to not have big values
     float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_SEARCH_THRESHOLD), FXAA_EDGE_THRESHOLD_MIN);
-    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+
+    // Mode 4: Skip edge direction reduction
+    if (g_value != 4)
+        dir *= (1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce));
+    else
+        dir *= (1.0 / min(abs(dir.x), abs(dir.y)));
 
     dir = min(float2(FXAA_SEARCH_STEPS, FXAA_SEARCH_STEPS),
         max(float2(-FXAA_SEARCH_STEPS, -FXAA_SEARCH_STEPS),
-            dir * rcpDirMin)) * rcpFrame;
+            dir)) * rcpFrame;
 
     //sample different pixels in edge direction and avarage them to get blended colors
     //rgbA average of two points along the direction
@@ -65,6 +76,13 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
         tex.SampleLevel(samp, uv + dir * -0.5, 0.0).rgb +
         tex.SampleLevel(samp, uv + dir * 0.5, 0.0).rgb);
 
+    // Mode 5: Always use rgbA color
+    if (g_value == 5)
+        return float4(rgbA, 1.0);
+
+    // Mode 6: Always use rgbB color
+    if (g_value == 6)
+        return float4(rgbB, 1.0);
 
     //compare luma values to pick correct values
     //if rbgB is outside of luma range rgbB might introduce artifacts so rgbA is used

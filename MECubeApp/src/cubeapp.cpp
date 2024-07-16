@@ -181,14 +181,16 @@ namespace capp
 		fxaaPostEffect* fxaa = m_Renderer->GetPostEffect<fxaaPostEffect>();
 		if (Input::GetInstance()->IsKeyDown('P') && lastFramePButtonUp)
 		{
-			if (fxaa->getValue() == 0)
+			float value = fxaa->getValue();
+
+			value++;
+
+			if (value > 6)
 			{
-				fxaa->setValue(1);
+				value = 0;
 			}
-			else if (fxaa->getValue() == 1)
-			{
-				fxaa->setValue(0);
-			}
+
+			fxaa->setValue(value);
 		}
 		lastFramePButtonUp = Input::GetInstance()->IsKeyUp('P');
 
