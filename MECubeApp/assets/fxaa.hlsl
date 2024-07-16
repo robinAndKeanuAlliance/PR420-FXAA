@@ -4,18 +4,19 @@
 SamplerState g_Sampler : register(s0);
 Texture2D g_OffscreenTexture : register(t0);
 
-static const float FXAA_EDGE_THRESHOLD = 0.125;  // edge detection threshold
 static const float FXAA_EDGE_THRESHOLD_MIN = 0.0625;  //minimum edge detection threshold
 static const float FXAA_SEARCH_STEPS = 8;  //mumber of searches step
 static const float FXAA_SEARCH_THRESHOLD = 0.25;  // search acceleration
-static const float FXAA_SUBPIX_CAP = 0.75;  // subpixel alliasing removal amount
-static const float FXAA_SUBPIX_TRIM = 0.05;  // subnpixel alliasing removal trimming
 
 cbuffer PostEffectCB : register(b2)
 {
     float g_value;
 };
 
+// tex -> input textur. hier der gerenderte screen
+// samp -> sampler state used fotr sampling. this defines how texture is sampled idk man
+// ub -> uv coordinate of current pixel being processed
+// rcpFrame -> texture dimensions / size of pixels on screen used for pixel sampling offset to get neighbors
 float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
 {
     if (g_value >= 1)
