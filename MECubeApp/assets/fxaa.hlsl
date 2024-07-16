@@ -53,7 +53,7 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
         max(float2(-FXAA_SEARCH_STEPS, -FXAA_SEARCH_STEPS),
             dir * rcpDirMin)) * rcpFrame;
 
-    //sample 2 different pixels in edge direction to get 2 different colors
+    //sample different pixels in edge direction and avarage them to get blended colors
     //rgbA average of two points along the direction
     //rgbB average of rgbA and two different samples against the direction of the edge
     //rgbB can potentially get a better result because its smoother but can introduce artifacts
