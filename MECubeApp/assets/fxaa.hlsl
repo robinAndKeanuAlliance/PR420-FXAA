@@ -52,7 +52,7 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     if (g_value == 3)
         return float4(dir, 0.0, 1.0);
 
-    //reduce edge direction to not have big values
+    //reduce edge direction magnitude in areas with similar brightness by comparing neighors luma values
     float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_SEARCH_THRESHOLD), FXAA_EDGE_THRESHOLD_MIN);
 
     // mode 4: skip edge direction reduction to show this makes result better
