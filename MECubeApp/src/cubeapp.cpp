@@ -218,14 +218,15 @@ namespace capp
 
 		switch (static_cast<int>(value))
 		{
-		case 0: message = "no fxaa\n"; break;
-		case 1: message = "fxaa\n"; break;
-		case 2: message = "edge detection step\n"; break;
-		case 3: message = "edge direction step\n"; break;
-		case 4: message = "fxaa without direction reduction\n"; break;
-		case 5: message = "forcing color A\n"; break;
-		case 6: message = "forcing color B\n"; break;
-		default: message = "unexpected fxaa value\n"; break;
+			case 0: message = "no fxaa\n"; break;
+			case 1: message = "fxaa\n"; break;
+			case 2: message = "edge detection step\n"; break;
+			case 3: message = "edge direction step\n"; break;
+			case 4: message = "fxaa without direction reduction\n"; break;
+			case 5: message = "forcing color A\n"; break;
+			case 6: message = "forcing color B\n"; break;
+			
+			default: message = "unexpected fxaa value\n"; break;
 		}
 
 		OutputDebugStringA(message);
