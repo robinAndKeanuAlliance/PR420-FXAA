@@ -92,7 +92,7 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     if (g_value == 7)
     {
         if (lumaB < lumaMin || lumaB > lumaMax)
-            return float4(1.0, 0.0, 0.0, 1.0);
+            return float4(1.0, 1.0, 1.0, 1.0);
         else
             return float4(0.0, 0.0, 0.0, 1.0);
     }
