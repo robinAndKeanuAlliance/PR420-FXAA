@@ -89,10 +89,20 @@ float4 FXAA(Texture2D tex, SamplerState samp, float2 uv, float2 rcpFrame)
     //general rule sharp edge rgbA is used
     float lumaB = dot(rgbB, luma);
 
-    if (lumaB < lumaMin || lumaB > lumaMax)
-        return float4(rgbA, 1.0);
+    if (g_value == 7)
+    {
+        if (lumaB < lumaMin || lumaB > lumaMax)
+            return float4(1.0, 0.0, 0.0, 1.0);
+        else
+            return float4(0.0, 0.0, 0.0, 1.0);
+    }
     else
-        return float4(rgbB, 1.0);
+    {
+        if (lumaB < lumaMin || lumaB > lumaMax)
+            return float4(rgbA, 1.0);
+        else
+            return float4(rgbB, 1.0);
+    }
 }
 
 float4 PS_Main(PS_INPUT_POSTEFFECT_PARAM IN) : SV_TARGET

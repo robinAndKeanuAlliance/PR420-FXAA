@@ -187,7 +187,7 @@ namespace capp
 
 			value++;
 
-			if (value > 6)
+			if (value > 7)
 			{
 				value = 0;
 			}
@@ -204,7 +204,7 @@ namespace capp
 
 			if (value < 0)
 			{
-				value = 6;
+				value = 7;
 			}
 
 
@@ -225,7 +225,8 @@ namespace capp
 			case 4: message = "fxaa without direction reduction\n"; break;
 			case 5: message = "forcing color A\n"; break;
 			case 6: message = "forcing color B\n"; break;
-			
+			case 7: message = "red is color a, black is color b\n"; break;
+
 			default: message = "unexpected fxaa value\n"; break;
 		}
 
