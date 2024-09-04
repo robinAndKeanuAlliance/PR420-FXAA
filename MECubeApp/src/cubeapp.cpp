@@ -194,6 +194,21 @@ namespace capp
 		}
 		lastFramePButtonUp = Input::GetInstance()->IsKeyUp('P');
 
+		if (Input::GetInstance()->IsKeyDown('O') && lastFrameOButtonUp)
+		{
+			float value = fxaa->getValue();
+
+			value--;
+
+			if (value < 0)
+			{
+				value = 6;
+			}
+
+			fxaa->setValue(value);
+		}
+		lastFrameOButtonUp = Input::GetInstance()->IsKeyUp('O');
+
 		//Control selected entity
         const auto entity = m_EntityManager.GetEntity(m_ControlledEntityID).lock();
 		auto controlledEntity = entity ? entity->GetComponent<TransformComponent>().lock() : std::shared_ptr<TransformComponent>();

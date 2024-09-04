@@ -51,6 +51,7 @@ namespace capp
 		std::shared_ptr<me::Renderer> m_Renderer;
 
 		bool lastFramePButtonUp;
+		bool lastFrameOButtonUp;
 	};
 
 }
